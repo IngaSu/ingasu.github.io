@@ -62,6 +62,7 @@ window.addEventListener("DOMContentLoaded", () => {
       return num;
     }
   }
+
   function setTimer(timerSelector) {
     const timer = document.querySelector(timerSelector),
       days = document.querySelector("#days"),
@@ -71,6 +72,7 @@ window.addEventListener("DOMContentLoaded", () => {
       timeInterval = setInterval(updateClock, 1000);
 
     updateClock();
+
     function updateClock() {
       const timerObj = getTimeRemaining(deadline);
       days.innerHTML = getZero(timerObj.days);
@@ -134,19 +136,89 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   window.addEventListener("scroll", showModalByScroll);
-});
 
-//Progress Bar
 
-function updateProgress() {
-  const progressBar = document.querySelector(".progress_bar"),
-    scrollPosition = document.documentElement.scrollTop,
-    totalHeight = document.documentElement.scrollHeight;
+  //Progress Bar
 
-  function updateValue() {
-    const newValue = Math.floor((scrollPosition * 100) / (totalHeight - 750));
-    progressBar.setAttribute("value", newValue);
+  function updateProgress() {
+    const progressBar = document.querySelector(".progress_bar"),
+      scrollPosition = document.documentElement.scrollTop,
+      totalHeight = document.documentElement.scrollHeight;
+
+    function updateValue() {
+      const newValue = Math.floor((scrollPosition * 100) / (totalHeight - 750));
+      progressBar.setAttribute("value", newValue);
+    }
+    updateValue();
   }
-  updateValue();
-}
-window.addEventListener("scroll", updateProgress);
+  window.addEventListener("scroll", updateProgress);
+
+  // Class
+  class Panel {
+    constructor(src, alt, subtitle, description, price, parentSelector, ...classes) {
+      this.src = src;
+      this.alt = alt;
+      this.subtitle = subtitle;
+      this.description = description;
+      this.price = price;
+      this.classes = classes;
+      this.parent = document.querySelector(parentSelector);
+    }
+
+    render() {
+      const element = document.createElement('div');
+
+      if (this.classes.length === 0) {
+        this.classes = "menu__item";
+        element.classList.add(this.classes);
+      } else {
+        this.classes.forEach(className => element.classList.add(className));
+      }
+
+      element.innerHTML = `
+      <img src=${this.src} alt=${this.alt} />
+      <h3 class="menu__item-subtitle">${this.subtitle}</h3>
+      <div class="menu__item-descr">${this.description}</div>
+      <div class="menu__item-divider"></div>
+      <div class="menu__item-price">
+        <div class="menu__item-cost">Цена:</div>
+        <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+      </div>
+    </div>`;
+      this.parent.append(element);
+    }
+  }
+
+  new Panel(
+    'img/tabs/vegy.jpg',
+    'vegy',
+    'Меню "Фитнес"',
+    `Меню "Фитнес" - это новый подход к приготовлению блюд: больше
+свежих овощей и фруктов. Продукт активных и здоровых людей. Это
+абсолютно новый продукт с оптимальной ценой и высоким качеством!`,
+    229,
+    '.menu .container').render();
+
+  new Panel(
+    'img/tabs/elite.jpg',
+    'elite',
+    'Меню “Премиум”',
+    `В меню “Премиум” мы используем не только красивый дизайн упаковки,
+но и качественное исполнение блюд. Красная рыба, морепродукты,
+фрукты - ресторанное меню без похода в ресторан!`,
+    550,
+    '.menu .container').render();
+
+  new Panel(
+    'img/tabs/post.jpg',
+    'post',
+    'Меню "Постное"',
+    `Меню “Постное” - это тщательный подбор ингредиентов: полное
+отсутствие продуктов животного происхождения, молоко из миндаля,
+овса, кокоса или гречки, правильное количество белков за счет тофу
+и импортных вегетарианских стейков.`,
+    430,
+    '.menu .container').render();
+
+
+});
