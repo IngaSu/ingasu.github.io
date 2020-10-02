@@ -195,40 +195,33 @@ window.addEventListener("DOMContentLoaded", () => {
       this.parent.append(element);
     }
   }
+  const getResources = async (url) => {
+    const result = await fetch(url);
+    if (!result.ok) {
+      throw Error(`Failed to fetch ${url} status: ${result.status}`);
+    }
+    return await result.json();
+  };
 
-  new Panel(
-    "img/tabs/vegy.jpg",
-    "vegy",
-    'Меню "Фитнес"',
-    `Меню "Фитнес" - это новый подход к приготовлению блюд: больше
-свежих овощей и фруктов. Продукт активных и здоровых людей. Это
-абсолютно новый продукт с оптимальной ценой и высоким качеством!`,
-    229,
-    ".menu .container"
-  ).render();
+  axios.get("http://localhost:3000/menu").then((data) =>
+    data.data.forEach(({ img, altimg, title, descr, price }) => {
+      new Panel(img, altimg, title, descr, price, ".menu .container").render();
+    })
+  );
 
-  new Panel(
-    "img/tabs/elite.jpg",
-    "elite",
-    "Меню “Премиум”",
-    `В меню “Премиум” мы используем не только красивый дизайн упаковки,
-но и качественное исполнение блюд. Красная рыба, морепродукты,
-фрукты - ресторанное меню без похода в ресторан!`,
-    550,
-    ".menu .container"
-  ).render();
-
-  new Panel(
-    "img/tabs/post.jpg",
-    "post",
-    'Меню "Постное"',
-    `Меню “Постное” - это тщательный подбор ингредиентов: полное
-отсутствие продуктов животного происхождения, молоко из миндаля,
-овса, кокоса или гречки, правильное количество белков за счет тофу
-и импортных вегетарианских стейков.`,
-    430,
-    ".menu .container"
-  ).render();
+  // getResources('http://localhost:3000/menu')
+  //   .then(data => {
+  //     data.forEach(
+  //       ({
+  //         img,
+  //         altimg,
+  //         title,
+  //         descr,
+  //         price
+  //       }) => {
+  //         new Panel(img, altimg, title, descr, price, ".menu .container").render();
+  //       });
+  //   });
 
   //Forms
   const forms = document.querySelectorAll("form"),
@@ -239,47 +232,49 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 
   forms.forEach((item) => {
-    postData(item);
+    bindPostData(item);
   });
 
-  function postData(form) {
+  const postData = async (url, body) => {
+    const result = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: body,
+    });
+    return await result.json();
+  };
+
+  function bindPostData(form) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
       let statusMessage = document.createElement("img");
-      statusMessage.setAttribute("src", message.loading);
+      statusMessage.src = message.loading;
       statusMessage.style.cssText = `
-      display: block;
-      margin: 0, auto;
-      z-index: 255;
-      `;
+                display: block;
+                margin: 0 auto;
+            `;
       form.insertAdjacentElement("afterend", statusMessage);
-
-      const request = new XMLHttpRequest();
-      request.open("POST", "js/server.php");
-      request.setRequestHeader("Content-type", "application/json");
 
       const formData = new FormData(form);
 
-      const object = {};
-      formData.forEach(function (value, key) {
-        object[key] = value;
-      });
+      const json = JSON.stringify(Object.fromEntries(formData.entries()));
+      console.log(json);
 
-      const json = JSON.stringify(object);
-
-      request.send(json);
-
-      request.addEventListener("load", () => {
-        if (request.status === 200) {
-          console.log(request.response);
+      postData("http://localhost:3000/requests", json)
+        .then((data) => {
+          console.log(data);
           showThanksModal(message.success);
-          form.reset();
           statusMessage.remove();
-        } else {
+        })
+        .catch(() => {
           showThanksModal(message.failure);
-        }
-      });
+        })
+        .finally(() => {
+          form.reset();
+        });
     });
   }
 
@@ -303,4 +298,59 @@ window.addEventListener("DOMContentLoaded", () => {
       closeModal();
     }, 4000);
   }
+
+  //Slider My version v1
+
+  const offerSlides = document.querySelectorAll(".offer__slide"),
+    leftSliderArrow = document.querySelector(".offer__slider-prev"),
+    rightSliderArrow = document.querySelector(".offer__slider-next"),
+    currentSlide = document.querySelector("#current"),
+    totalSlides = document.querySelector("#total");
+
+  function hideSides() {
+    offerSlides.forEach((slide) => {
+      slide.classList.add("hide");
+      slide.classList.remove("show");
+    });
+  }
+
+  function showSides(i) {
+    offerSlides[i].classList.add("show");
+    offerSlides[i].classList.remove("hide");
+
+    if (offerSlides.length < 10) {
+      totalSlides.innerHTML = `0${offerSlides.length}`;
+      currentSlide.innerHTML = `0${i + 1}`;
+    } else {
+      totalSlides.innerHTML = offerSlides.length;
+      currentSlide.innerHTML = i + 1;
+    }
+  }
+
+  function slider() {
+    let i = 0;
+    hideSides();
+    showSides(i);
+
+    rightSliderArrow.addEventListener("click", () => {
+      hideSides();
+      if (i < offerSlides.length - 1) {
+        i++;
+      } else {
+        i = 0;
+      }
+      showSides(i);
+    });
+
+    leftSliderArrow.addEventListener("click", () => {
+      hideSides();
+      if (i === 0) {
+        i = offerSlides.length - 1;
+      } else {
+        i--;
+      }
+      showSides(i);
+    });
+  }
+  slider();
 });
