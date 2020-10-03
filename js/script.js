@@ -204,7 +204,13 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   axios.get("http://localhost:3000/menu").then((data) =>
-    data.data.forEach(({ img, altimg, title, descr, price }) => {
+    data.data.forEach(({
+      img,
+      altimg,
+      title,
+      descr,
+      price
+    }) => {
       new Panel(img, altimg, title, descr, price, ".menu .container").render();
     })
   );
@@ -299,58 +305,157 @@ window.addEventListener("DOMContentLoaded", () => {
     }, 4000);
   }
 
-  //Slider My version v1
 
-  const offerSlides = document.querySelectorAll(".offer__slide"),
+  const slides = document.querySelectorAll(".offer__slide"),
     leftSliderArrow = document.querySelector(".offer__slider-prev"),
     rightSliderArrow = document.querySelector(".offer__slider-next"),
     currentSlide = document.querySelector("#current"),
-    totalSlides = document.querySelector("#total");
+    totalSlides = document.querySelector("#total"),
+    wrapper = document.querySelector(".offer__slider-wrapper"),
+    sliderField = document.querySelector(".offer__slider-inner"),
+    width = window.getComputedStyle(wrapper).width,
+    sliderFullWidget = document.querySelector('.offer__slider');
 
-  function hideSides() {
-    offerSlides.forEach((slide) => {
-      slide.classList.add("hide");
-      slide.classList.remove("show");
-    });
+  //Slider v2
+  let index = 0;
+  let offset = 0;
+
+  updateSliderIndex(index);
+
+  let widthOfWrapper = +width.substring(0, width.length - 2);
+
+  sliderField.style.width = 100 * slides.length + "%";
+  sliderField.style.display = "flex";
+  sliderField.style.transition = "all 0.5s";
+
+  wrapper.style.overflow = "hidden";
+
+  slides.forEach((slide) => {
+    slide.style.width = width;
+  });
+
+  setOffset(index);
+
+  function setOffset(index) {
+    console.log(index);
+    offset = widthOfWrapper * (index);
+    sliderField.style.transform = `translateX(-${offset}px)`;
   }
 
-  function showSides(i) {
-    offerSlides[i].classList.add("show");
-    offerSlides[i].classList.remove("hide");
+  function updateSliderIndex(index) {
 
-    if (offerSlides.length < 10) {
-      totalSlides.innerHTML = `0${offerSlides.length}`;
-      currentSlide.innerHTML = `0${i + 1}`;
+    if (slides.length < 10) {
+      totalSlides.innerHTML = `0${slides.length}`;
+      currentSlide.innerHTML = `0${index + 1}`;
     } else {
-      totalSlides.innerHTML = offerSlides.length;
-      currentSlide.innerHTML = i + 1;
+      totalSlides.innerHTML = slides.length;
+      currentSlide.innerHTML = index + 1;
     }
+
   }
 
-  function slider() {
-    let i = 0;
-    hideSides();
-    showSides(i);
+  rightSliderArrow.addEventListener("click", () => {
 
-    rightSliderArrow.addEventListener("click", () => {
-      hideSides();
-      if (i < offerSlides.length - 1) {
-        i++;
-      } else {
-        i = 0;
-      }
-      showSides(i);
-    });
+    if (index >= 0 && index < slides.length - 1) {
+      index++;
+    } else {
+      index = 0;
+    }
 
-    leftSliderArrow.addEventListener("click", () => {
-      hideSides();
-      if (i === 0) {
-        i = offerSlides.length - 1;
-      } else {
-        i--;
-      }
-      showSides(i);
-    });
+    setOffset(index);
+    updateSliderIndex(index);
+
+  });
+
+  leftSliderArrow.addEventListener("click", () => {
+
+    if (index <= 0) {
+      index = slides.length - 1;
+    } else {
+      index--;
+    }
+
+    setOffset(index);
+    updateSliderIndex(index);
+
+  });
+
+  //Dots
+
+  sliderFullWidget.style.position = 'relative';
+
+  function createSliderDots() {
+
+    const dotsWrapper = document.createElement('div');
+    dotsWrapper.classList.add('carousel-indicators');
+    sliderFullWidget.append(dotsWrapper);
+    let dot;
+
+    for (let i = 0; i < slides.length; i++) {
+
+      dot = document.createElement('div');
+      dot.classList.add('dot');
+      dotsWrapper.append(dot);
+
+      dot.addEventListener('click', () => {
+        console.log('cliked');
+        setOffset(i);
+        updateSliderIndex(i);
+      });
+
+    }
+
   }
-  slider();
+  createSliderDots();
+
+  //Slider My version v1
+
+  // function hideSides() {
+  //   slides.forEach((slide) => {
+  //     slide.classList.add("hide");
+  //     slide.classList.remove("show");
+  //   });
+  // }
+
+  // function showSides(i) {
+  //   slides[i].classList.add("show");
+  //   slides[i].classList.remove("hide");
+
+  //   if (slides.length < 10) {
+  //     totalSlides.innerHTML = `0${slides.length}`;
+  //     currentSlide.innerHTML = `0${i + 1}`;
+  //   } else {
+  //     totalSlides.innerHTML = slides.length;
+  //     currentSlide.innerHTML = i + 1;
+  //   }
+  // }
+
+  // function slider() {
+  //   let i = 0;
+  //   hideSides();
+  //   showSides(i);
+
+  //   rightSliderArrow.addEventListener("click", () => {
+  //     hideSides();
+  //     if (i < slides.length - 1) {
+  //       i++;
+  //     } else {
+  //       i = 0;
+  //     }
+  //     showSides(i);
+  //   });
+
+  //   leftSliderArrow.addEventListener("click", () => {
+  //     hideSides();
+  //     if (i === 0) {
+  //       i = slides.length - 1;
+  //     } else {
+  //       i--;
+  //     }
+  //     showSides(i);
+  //   });
+  // }
+  // slider();
+
+
 });
