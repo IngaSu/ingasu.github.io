@@ -204,13 +204,7 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   axios.get("http://localhost:3000/menu").then((data) =>
-    data.data.forEach(({
-      img,
-      altimg,
-      title,
-      descr,
-      price
-    }) => {
+    data.data.forEach(({ img, altimg, title, descr, price }) => {
       new Panel(img, altimg, title, descr, price, ".menu .container").render();
     })
   );
@@ -305,7 +299,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }, 4000);
   }
 
-
   const slides = document.querySelectorAll(".offer__slide"),
     leftSliderArrow = document.querySelector(".offer__slider-prev"),
     rightSliderArrow = document.querySelector(".offer__slider-next"),
@@ -314,7 +307,7 @@ window.addEventListener("DOMContentLoaded", () => {
     wrapper = document.querySelector(".offer__slider-wrapper"),
     sliderField = document.querySelector(".offer__slider-inner"),
     width = window.getComputedStyle(wrapper).width,
-    sliderFullWidget = document.querySelector('.offer__slider');
+    sliderFullWidget = document.querySelector(".offer__slider");
 
   //Slider v2
   let index = 0;
@@ -322,7 +315,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
   updateSliderIndex(index);
 
-  let widthOfWrapper = +width.substring(0, width.length - 2);
+  let widthOfWrapper = function (str) {
+    const newStr = str.replace(/\D/gi, "");
+    return +newStr;
+  };
 
   sliderField.style.width = 100 * slides.length + "%";
   sliderField.style.display = "flex";
@@ -337,13 +333,11 @@ window.addEventListener("DOMContentLoaded", () => {
   setOffset(index);
 
   function setOffset(index) {
-    console.log(index);
-    offset = widthOfWrapper * (index);
+    offset = widthOfWrapper(width) * index;
     sliderField.style.transform = `translateX(-${offset}px)`;
   }
 
   function updateSliderIndex(index) {
-
     if (slides.length < 10) {
       totalSlides.innerHTML = `0${slides.length}`;
       currentSlide.innerHTML = `0${index + 1}`;
@@ -351,11 +345,9 @@ window.addEventListener("DOMContentLoaded", () => {
       totalSlides.innerHTML = slides.length;
       currentSlide.innerHTML = index + 1;
     }
-
   }
 
   rightSliderArrow.addEventListener("click", () => {
-
     if (index >= 0 && index < slides.length - 1) {
       index++;
     } else {
@@ -364,48 +356,42 @@ window.addEventListener("DOMContentLoaded", () => {
 
     setOffset(index);
     updateSliderIndex(index);
-
   });
 
   leftSliderArrow.addEventListener("click", () => {
-
     if (index <= 0) {
       index = slides.length - 1;
     } else {
       index--;
+      console.log(e.target);
     }
 
     setOffset(index);
     updateSliderIndex(index);
-
   });
 
   //Dots
 
-  sliderFullWidget.style.position = 'relative';
+  sliderFullWidget.style.position = "relative";
 
   function createSliderDots() {
-
-    const dotsWrapper = document.createElement('div');
-    dotsWrapper.classList.add('carousel-indicators');
-    sliderFullWidget.append(dotsWrapper);
+    const dotsWrapper = document.createElement("ul");
     let dot;
+    dotsWrapper.classList.add("carousel-indicators");
+    sliderFullWidget.append(dotsWrapper);
 
     for (let i = 0; i < slides.length; i++) {
-
-      dot = document.createElement('div');
-      dot.classList.add('dot');
+      dot = document.createElement("li");
+      dot.classList.add("dot");
       dotsWrapper.append(dot);
 
-      dot.addEventListener('click', () => {
-        console.log('cliked');
+      dot.addEventListener("click", (e) => {
         setOffset(i);
         updateSliderIndex(i);
       });
-
     }
-
   }
+
   createSliderDots();
 
   //Slider My version v1
@@ -457,5 +443,122 @@ window.addEventListener("DOMContentLoaded", () => {
   // }
   // slider();
 
+  // Calculator
 
+  let sex, ratio, weight, height, age;
+
+  if (localStorage.getItem("ratio")) {
+    ratio = localStorage.getItem("ratio");
+  } else {
+    ratio = "1.375";
+  }
+
+  if (localStorage.getItem("sex")) {
+    sex = localStorage.getItem("sex");
+  } else {
+    sex = "female";
+  }
+
+  function initLocalSettings(selector, activeClass) {
+    const elements = document.querySelectorAll(`${selector}`);
+
+    elements.forEach((elem) => {
+      elem.classList.remove(activeClass);
+
+      if (elem.getAttribute("id") === localStorage.getItem("sex")) {
+        elem.classList.add(activeClass);
+      }
+
+      if (elem.getAttribute("data-ratio") === localStorage.getItem("ratio")) {
+        elem.classList.add(activeClass);
+      }
+    });
+  }
+
+  initLocalSettings(
+    ".calculating__choose-item",
+    "calculating__choose-item_active"
+  );
+
+  function calculateBMR() {
+    let result = document.querySelector(".calculating__result span");
+
+    if (!weight || !height || !age || !ratio || !sex) {
+      result.textContent = "____";
+      return;
+    }
+
+    if (sex == "female") {
+      result.textContent = Math.round(
+        (447.6 + 9.2 * weight + 3.1 * height - 4.3 * age) * ratio
+      );
+    } else {
+      result.textContent = Math.round(
+        (88.36 + 13.4 * weight + 4.8 * height - 5.7 * age) * ratio
+      );
+    }
+    console.log(sex, weight, height, age);
+  }
+  calculateBMR();
+
+  function syncStaticFields(selector, activeClass) {
+    const elements = document.querySelectorAll(`${selector} div`);
+
+    elements.forEach((elem) => {
+      elem.addEventListener("click", (e) => {
+        if (e.target.getAttribute("data-ratio")) {
+          ratio = +e.target.getAttribute("data-ratio");
+          localStorage.setItem("ratio", ratio);
+        } else {
+          sex = e.target.getAttribute("id");
+          localStorage.setItem("sex", sex);
+        }
+
+        elements.forEach((elem) => {
+          elem.classList.remove(activeClass);
+        });
+
+        e.target.classList.add(activeClass);
+
+        calculateBMR();
+      });
+    });
+  }
+
+  syncStaticFields("#gender", "calculating__choose-item_active");
+  syncStaticFields(
+    ".calculating__choose_big",
+    "calculating__choose-item_active"
+  );
+
+  function syncDynamicFiels(selector) {
+    const input = document.querySelector(`${selector}`);
+
+    input.addEventListener("input", () => {
+      if (input.value.match(/\D/)) {
+        input.style.border = "1px solid red";
+      } else {
+        input.style.border = "none";
+      }
+
+      switch (input.getAttribute("id")) {
+        case "height":
+          height = +input.value;
+          break;
+
+        case "weight":
+          weight = +input.value;
+          break;
+
+        case "age":
+          age = +input.value;
+          break;
+      }
+      calculateBMR();
+    });
+  }
+
+  syncDynamicFiels("#weight");
+  syncDynamicFiels("#height");
+  syncDynamicFiels("#age");
 });

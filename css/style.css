@@ -776,3 +776,7 @@ progress.progress_bar {
     opacity: .5;
     transition: opacity .6s ease;
 }
+
+.active_dot {
+    opacity: 1;
+}
