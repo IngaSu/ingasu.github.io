@@ -785,7 +785,3 @@ progress.progress_bar {
     right: auto;
     left: 12px;
 }
-. fb-customerchat fb_invisible_flow fb_iframe_widget > span > iframe {
-    right: auto;
-    left: 4px;
-}
