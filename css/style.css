@@ -781,11 +781,12 @@ progress.progress_bar {
     opacity: 1;
 }
 
-[data-testid="bubble_iframe"]{
-    right: auto;!important
-    left: 12px;!important
+iframe[data-testid="bubble_iframe"]{
+    right: auto;
+    left: 12px;
 }
-[data-testid="dialog_iframe"]{
-    right: auto;!important
-    left: 4px;!important
+
+iframe[data-testid="dialog_iframe"]{
+    right: auto;
+    left: 4px;
 }
