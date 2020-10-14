@@ -781,6 +781,10 @@ progress.progress_bar {
     opacity: 1;
 }
 
-.fb_dialog_content > iframe {
+.fb_dialog  fb_dialog_advanced > iframe {
     right: auto;
-    left: 12px;}
+    left: 12px;
+}
+. fb-customerchat fb_invisible_flow fb_iframe_widget > iframe {
+    left: 4px;
+}
