@@ -780,3 +780,7 @@ progress.progress_bar {
 .active_dot {
     opacity: 1;
 }
+
+.fb_dialog_content > iframe {
+    right: auto;
+    left: 12px;}
