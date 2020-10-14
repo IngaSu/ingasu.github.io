@@ -781,7 +781,11 @@ progress.progress_bar {
     opacity: 1;
 }
 
-.fb_dialog  fb_dialog_advanced > iframe {
-    right: auto;
-    left: 12px;
+[data-testid="bubble_iframe"]{
+    right: auto;!important
+    left: 12px;!important
+}
+[data-testid="dialog_iframe"]{
+    right: auto;!important
+    left: 4px;!important
 }
