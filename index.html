@@ -241,23 +241,25 @@ function mmData(o) { mmDataLayer.push(o); }
     <div class="order">
       <div class="container">
         <div class="title">Заказывай пробный день прямо сейчас!</div>
+        
+<div class="mobilemonkey-checkbox" ref="40b963462ff7ebb222d99ad290769a333928e4d2ced71b1beb"></div>
         <form action="#" class="order__form">
           <input
             required
-            placeholder="Ваше имя"
+            placeholder="Your name"
             name="name"
             type="text"
             class="order__input"
           />
           <input
             required
-            placeholder="Ваш номер телефона"
+            placeholder="Your phone"
             name="phone"
             type="phone"
             class="order__input"
           />
           <img src="icons/right.svg" alt="right" />
-          <button class="btn btn_dark btn_min">Перезвонить мне</button>
+          <button class="btn btn_dark btn_min" onclick='confirmOptIn()'>Contact me</button>
         </form>
       </div>
     </div>
