@@ -325,24 +325,27 @@ function mmData(o) { mmDataLayer.push(o); }
           <form action="#">
             <div data-close class="modal__close" >&times;</div>
             <div class="modal__title">
-              Мы свяжемся с вами как можно быстрее!
+              We will contact you as soon as possible!
             </div>
             <input
               required
-              placeholder="Ваше имя"
+              placeholder="Your name"
               name="name"
               type="text"
               class="modal__input"
             />
             <input
               required
-              placeholder="Ваш номер телефона"
+              placeholder="Your phone number"
               name="phone"
               type="phone"
               class="modal__input"
             />
-            <div style='margin: 0% 0% 5% 30%;'class="mobilemonkey-send-to-messenger" ref="aed5ecad9ae13ad2c83e7246305c2e339911a77c51cbe8b796"></div>
-            <button class="btn btn_dark btn_min">Перезвонить мне</button>
+            
+          <script async="async" src="https://static.mobilemonkey.com/js/2055437778089419.js"></script>
+            <div class="mobilemonkey-checkbox" ref="40b963462ff7ebb222d99ad290769a333928e4d2ced71b1beb"></div>
+           
+            <button class="btn btn_dark btn_min" onclick='confirmOptIn()'>Contact Me</button>
           </form>
         </div>
       </div>
