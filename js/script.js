@@ -37,7 +37,7 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   //Timer
-  const deadline = "2020-10-01";
+  const deadline = "2021-10-01";
 
   function getTimeRemaining(endTime) {
     let t = Date.parse(endTime) - Date.parse(new Date()),
@@ -123,7 +123,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  const modalTimerId = setTimeout(openModal, 50000);
+//   const modalTimerId = setTimeout(openModal, 50000);
 
   function showModalByScroll() {
     if (
