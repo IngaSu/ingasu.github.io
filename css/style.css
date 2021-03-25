@@ -782,7 +782,7 @@ progress.progress_bar {
 }
 
 media(max-width: 600px) {
-    iframe#mm-chat-window {
+    #mm-chat-window {
       height: 90%!mportant;
     }
 }
