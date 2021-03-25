@@ -783,7 +783,7 @@ progress.progress_bar {
 
 media(max-width: 600px) {
     #mm-chat-window {
-      height: 90%!mportant;
+      height: 50%!mportant;
     }
 }
 
