@@ -781,6 +781,17 @@ progress.progress_bar {
     opacity: 1;
 }
 
+media(max-width: 600px) {
+    .mobile.main {
+      height: 90%
+    }
+    
+    .main {
+      top: auto
+    }
+}
+
+
 /* iframe[data-testid="bubble_iframe"]{
     right: auto;
     left: 12px;
