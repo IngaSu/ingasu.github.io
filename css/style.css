@@ -783,11 +783,11 @@ progress.progress_bar {
 
 media(max-width: 600px) {
     .mobile.main {
-      height: 90%
+      height: 90%!mportant;
     }
     
     .main {
-      top: auto
+      top: auto!mportant;
     }
 }
 
