@@ -781,11 +781,11 @@ progress.progress_bar {
     opacity: 1;
 }
 
-media(max-width: 600px) {
-    #mm-chat-window {
+
+    .open-up.mobile #mm-chat-window {
       height: 50%!mportant;
     }
-}
+
 
 
 /* iframe[data-testid="bubble_iframe"]{
