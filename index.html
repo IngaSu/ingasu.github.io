@@ -9,6 +9,8 @@
 <script>
 window.mmDataLayer = window.mmDataLayer || [];
 function mmData(o) { mmDataLayer.push(o); }
+var thisLocation = window.location.href
+mmData({attributes: { 'URL_AT_SUBMISSION': thisLocation}});
 </script>
     
   </head>
