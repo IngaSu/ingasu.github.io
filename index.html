@@ -8,8 +8,9 @@
 <script async="async" src="https://static.mobilemonkey.com/js/113655320004466.js"></script>
 <script>
 window.mmDataLayer = window.mmDataLayer || [];
-var o = {attributes: { 'URL_AT_SUBMISSION': 123}};  
-function mmData(o) { mmDataLayer.push(o); }
+function mmData(o) { mmDataLayer.push(o); };
+var thisLocation = window.location.href;
+mmData({attributes: { 'URL_AT_SUBMISSION': thisLocation}});
 </script>
     
   </head>
