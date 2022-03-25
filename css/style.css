@@ -781,9 +781,9 @@ progress.progress_bar {
     opacity: 1;
 }
 
-/* .fb-customerchat iframe:not(.fb_customer_chat_bounce_in_v2) {
+.fb-customerchat iframe {
 max-height: 0 !important;
-} */
+}
 
 /* @media(max-width: 600px) {
 
