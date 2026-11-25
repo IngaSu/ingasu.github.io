@@ -66,7 +66,7 @@ export async function POST(request) {
   await saveContact(contact, {
     messageId,
     webhookId: request.headers.get("X-Webhook-Id"),
-    eventTs: Number(request.headers.get("X-Event-TS")) || null,
+    eventTs: request.headers.get("X-Event-TS"), // ISO 8601 UTC
     attempt: Number(request.headers.get("X-Attempt")) || 1,
   });
   if (messageId) seen.add(messageId);
